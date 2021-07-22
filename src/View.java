@@ -2,8 +2,10 @@ package com.javarush.task.task32.task3209;
 
 import com.javarush.task.task32.task3209.listeners.FrameListener;
 import com.javarush.task.task32.task3209.listeners.TabbedPaneChangeListener;
+import com.javarush.task.task32.task3209.listeners.TextEditMenuListener;
 
 import javax.swing.*;
+import javax.swing.event.MenuListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -13,6 +15,20 @@ public class View extends JFrame implements ActionListener {
     private JTabbedPane tabbedPane = new JTabbedPane(); //панель (с двумя вкладками)
     private JTextPane htmlTextPane = new JTextPane(); //вкладка для визуального редактирования html
     private JEditorPane plainTextPane = new JEditorPane(); //вкладка для редактирования html (код, теги, содержимое)
+
+    public View() {
+        try {
+            UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
+        } catch (ClassNotFoundException e) {
+            ExceptionHandler.log(e);
+        } catch (InstantiationException e) {
+            ExceptionHandler.log(e);
+        } catch (IllegalAccessException e) {
+            ExceptionHandler.log(e);
+        } catch (UnsupportedLookAndFeelException e) {
+            ExceptionHandler.log(e);
+        }
+    }
 
     public Controller getController() {
         return controller;
@@ -40,7 +56,18 @@ public class View extends JFrame implements ActionListener {
     }
 
     //отвечает за инициализацию меню
-    public void initMenuBar() {}
+    public void initMenuBar() {
+        JMenuBar menuBar = new JMenuBar(); //панель меню
+        MenuHelper.initFileMenu(this, menuBar);
+        MenuHelper.initEditMenu(this, menuBar);
+        MenuHelper.initStyleMenu(this, menuBar);
+        MenuHelper.initAlignMenu(this, menuBar);
+        MenuHelper.initColorMenu(this, menuBar);
+        MenuHelper.initFontMenu(this, menuBar);
+        MenuHelper.initHelpMenu(this, menuBar);
+        //добавляем в верхнюю часть панели контента панель меню
+        this.getContentPane().add(menuBar, BorderLayout.NORTH);
+    }
 
     //отвечает за инициализацию панели редактора
     public void initEditor() {
@@ -49,7 +76,8 @@ public class View extends JFrame implements ActionListener {
         tabbedPane.add("HTML", htmlScrollPane); //добавляем вкладку в панель
         JScrollPane plainScrollPane = new JScrollPane(plainTextPane);
         tabbedPane.add("Текст", plainScrollPane); //добавляем вкладку в панель
-        tabbedPane.setPreferredSize(new Dimension(40, 70)); //устанавливаем размер панели
+        tabbedPane.setPreferredSize(new Dimension(300, 350)); //устанавливаем размер панели
+        //добавляем панель вкладок в панель контента
         TabbedPaneChangeListener tabbedListener = new TabbedPaneChangeListener(this);
         tabbedPane.addChangeListener(tabbedListener);
         this.getContentPane().add(tabbedPane, BorderLayout.CENTER);

@@ -12,7 +12,7 @@ public class FrameListener extends WindowAdapter {
         this.view = view;
     }
 
-    //закрыть программу (метод exit() у view -> controller
+    //закрыть программу (метод exit() у view -> controller)
     @Override
     public void windowClosing(WindowEvent windowEvent) {
         view.exit();

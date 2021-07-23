@@ -7,6 +7,7 @@ import com.javarush.task.task32.task3209.listeners.UndoListener;
 
 import javax.swing.*;
 import javax.swing.event.MenuListener;
+import javax.swing.text.html.HTMLDocument;
 import javax.swing.undo.UndoManager;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -133,4 +134,29 @@ public class View extends JFrame implements ActionListener {
         undoManager.discardAllEdits();
     }
 
+    //проверяет, какая вкладка выбрана
+    public boolean isHtmlTabSelected() {
+        return tabbedPane.getSelectedIndex() == 0;
+    }
+
+    //выбирает вкладку html и сбрасывает все правки
+    public void selectHtmlTab() {
+        tabbedPane.setSelectedIndex(0);
+        resetUndo();
+    }
+
+    //получает document(Controller) и устанавливает его в панели html
+    public void update() {
+        HTMLDocument document = controller.getDocument();
+        htmlTextPane.setDocument(document);
+    }
+
+    //информация о программе
+    public void showAbout() {
+        String message = "HTML редактор с графическим интерфейсом.\n" +
+                "В качестве библиотеки для создания графического интерфейса воспользуется Swing.\n" +
+                "А в качестве архитектурного каркаса приложения используется MVC модель.\n";
+        JOptionPane.showMessageDialog(tabbedPane.getSelectedComponent(), message,
+                "О программе", JOptionPane.INFORMATION_MESSAGE);
+    }
 }

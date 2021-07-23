@@ -3,9 +3,11 @@ package com.javarush.task.task32.task3209;
 import com.javarush.task.task32.task3209.listeners.FrameListener;
 import com.javarush.task.task32.task3209.listeners.TabbedPaneChangeListener;
 import com.javarush.task.task32.task3209.listeners.TextEditMenuListener;
+import com.javarush.task.task32.task3209.listeners.UndoListener;
 
 import javax.swing.*;
 import javax.swing.event.MenuListener;
+import javax.swing.undo.UndoManager;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -15,8 +17,10 @@ public class View extends JFrame implements ActionListener {
     private JTabbedPane tabbedPane = new JTabbedPane(); //панель (с двумя вкладками)
     private JTextPane htmlTextPane = new JTextPane(); //вкладка для визуального редактирования html
     private JEditorPane plainTextPane = new JEditorPane(); //вкладка для редактирования html (код, теги, содержимое)
+    private UndoManager undoManager = new UndoManager();
+    private UndoListener undoListener = new UndoListener(undoManager);
 
-    public View() {
+    public View() throws HeadlessException {
         try {
             UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
         } catch (ClassNotFoundException e) {
@@ -28,6 +32,10 @@ public class View extends JFrame implements ActionListener {
         } catch (UnsupportedLookAndFeelException e) {
             ExceptionHandler.log(e);
         }
+    }
+
+    public UndoListener getUndoListener() {
+        return undoListener;
     }
 
     public Controller getController() {
@@ -91,4 +99,38 @@ public class View extends JFrame implements ActionListener {
     }
 
     public void selectedTabChanged() {}
+
+    //можем ли отменить действие?
+    public boolean canUndo() {
+        return undoManager.canUndo();
+    }
+
+    //можем ли сделать возврат?
+    public boolean canRedo() {
+        return undoManager.canRedo();
+    }
+
+    //отмена
+    public void undo() {
+        try {
+            undoManager.undo();
+        } catch (Exception e) {
+            ExceptionHandler.log(e);
+        }
+    }
+
+    //возврат
+    public void redo() {
+        try {
+            undoManager.redo();
+        } catch (Exception e) {
+            ExceptionHandler.log(e);
+        }
+    }
+
+    //сброс отмены
+    public void resetUndo() {
+        undoManager.discardAllEdits();
+    }
+
 }

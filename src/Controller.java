@@ -15,6 +15,16 @@ public class Controller {
     public HTMLDocument getDocument() {
         return document;
     }
+    
+    //сбрасывает текущий документ
+    public void resetDocument() {
+        if (document != null) {
+            document.removeUndoableEditListener(view.getUndoListener());
+        }
+        document = (HTMLDocument) new HTMLEditorKit().createDefaultDocument();
+        document.addUndoableEditListener(view.getUndoListener());
+        view.update();
+    }
 
     public static void main(String[] args) {
         View view = new View();

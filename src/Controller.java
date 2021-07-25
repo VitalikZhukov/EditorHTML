@@ -79,7 +79,22 @@ public class Controller {
 
     public void saveDocument() {}
 
-    public void saveDocumentAs() {}
+    public void saveDocumentAs() {
+        view.selectHtmlTab();
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setFileFilter(new HTMLFileFilter());
+        int choose = fileChooser.showSaveDialog(view);
+        if (choose == JFileChooser.APPROVE_OPTION) {
+            currentFile = fileChooser.getSelectedFile();
+            view.setTitle(currentFile.getName());
+            try (FileWriter writer = new FileWriter(currentFile)) {
+                HTMLEditorKit htmlEditorKit = new HTMLEditorKit();
+                htmlEditorKit.write(writer, document, 0, document.getLength());
+            } catch (IOException | BadLocationException e) {
+                ExceptionHandler.log(e);
+            }
+        }
+    }
 
     public void exit() {
         System.exit(0);

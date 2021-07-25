@@ -47,8 +47,30 @@ public class View extends JFrame implements ActionListener {
         this.controller = controller;
     }
 
+    //будет вызваться при выборе пунктов меню, у которых наше представление указано в виде слушателя событий
     @Override
     public void actionPerformed(ActionEvent e) {
+        String command = e.getActionCommand(); //пункт меню, созданный событием
+        switch (command) {
+            case("Новый"):
+                controller.createNewDocument();
+                break;
+            case("Открыть"):
+                controller.openDocument();
+                break;
+            case("Сохранить"):
+                controller.saveDocument();
+                break;
+            case("Сохранить как..."):
+                controller.saveDocumentAs();
+                break;
+            case("Выход"):
+                controller.exit();
+                break;
+            case("О программе"):
+                this.showAbout();
+                break;
+        }
 
     }
 
@@ -99,7 +121,17 @@ public class View extends JFrame implements ActionListener {
         pack();
     }
 
-    public void selectedTabChanged() {}
+    //вызывается, когда произошла смена выбранной вкладки, устанавливает текст выбранной вкладки
+    public void selectedTabChanged() {
+        if (tabbedPane.getSelectedIndex() == 0) {
+            String text = plainTextPane.getText();
+            controller.setPlainText(text);
+        } else if (tabbedPane.getSelectedIndex() == 1) {
+            String text = controller.getPlainText();
+            plainTextPane.setText(text);
+        }
+        this.resetUndo();
+    }
 
     //можем ли отменить действие?
     public boolean canUndo() {

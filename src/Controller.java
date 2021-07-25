@@ -1,7 +1,12 @@
 package com.javarush.task.task32.task3209;
 
+import javax.swing.text.BadLocationException;
 import javax.swing.text.html.HTMLDocument;
+import javax.swing.text.html.HTMLEditorKit;
 import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
 
 public class Controller {
     private View view; //визуализация
@@ -12,18 +17,10 @@ public class Controller {
         this.view = view;
     }
 
-    public static void main(String[] args) {
-        View view = new View();
-        Controller controller = new Controller(view);
-        view.setController(controller);
-        view.init();
-        controller.init();
-    }
-    
     public HTMLDocument getDocument() {
         return document;
     }
-    
+
     //сбрасывает текущий документ
     public void resetDocument() {
         if (document != null) {
@@ -33,7 +30,15 @@ public class Controller {
         document.addUndoableEditListener(view.getUndoListener());
         view.update();
     }
-    
+
+    public static void main(String[] args) {
+        View view = new View();
+        Controller controller = new Controller(view);
+        view.setController(controller);
+        view.init();
+        controller.init();
+    }
+
     //записывает переданный text с html в document
     public void setPlainText(String text) {
         resetDocument();
@@ -46,7 +51,7 @@ public class Controller {
         }
     }
 
-    //возвращает текст с html
+    //
     public String getPlainText() {
         StringWriter writer = new StringWriter();
         HTMLEditorKit htmlEditorKit = new HTMLEditorKit();
@@ -59,7 +64,22 @@ public class Controller {
     }
 
     //отвечает за инициализацию view
-    public void init() {}
+    public void init() {
+        this.createNewDocument();
+    }
+
+    public void createNewDocument() {
+        view.selectHtmlTab(); //выбираем вкладку html
+        this.resetDocument(); //сброс текущего документа
+        view.setTitle("HTML редактор");
+        currentFile = null;
+    }
+
+    public void openDocument() {}
+
+    public void saveDocument() {}
+
+    public void saveDocumentAs() {}
 
     public void exit() {
         System.exit(0);
